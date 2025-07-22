@@ -61,6 +61,15 @@ mars_radius = int(min(screen_width, screen_height) * 0.006)
 mars_orbit_radius = int(min(screen_width, screen_height) * 0.25)
 mars_angle = 0
 
+# Jupiter
+
+jupiter_color = (255, 165, 0)
+jupiter_radius = int(min(screen_width, screen_height) * 0.02)
+jupiter_orbit_radius = int(min(screen_width, screen_height) * 0.3)
+jupiter_angle = 0
+
+
+
 
 def pause():
     while True: 
@@ -87,6 +96,7 @@ def pause():
         pygame.draw.circle(screen, moon_color, (int(moon_x), int(moon_y)), moon_radius)
         pygame.draw.circle(screen, mars_color, (int(mars_x), int(mars_y)), mars_radius)
         pygame.draw.circle(screen, mars_color, (int(mars_x), int(mars_y)), mars_radius)
+        pygame.draw.circle(screen, jupiter_color, (int(jupiter_x), int(jupiter_y)), jupiter_radius)
         speed_text = font.render(f"Speed: {int(display_speed)}", True, (255, 255, 255))
         screen.blit(paused_text, (50, 50))
         screen.blit(speed_text, (50, 1000))
@@ -137,7 +147,10 @@ while running:
 
     display_speed = speed * 5
 
-    
+
+
+    if display_speed < 1:
+        display_speed = 1
 
     # mercury orbit
     mer_angle += 0.02 * speed
@@ -165,6 +178,12 @@ while running:
     mars_x = sun_pos[0] + mars_orbit_radius * math.cos(mars_angle)
     mars_y = sun_pos[1] + mars_orbit_radius * math.sin(mars_angle)
 
+    # Jupiter orbit
+
+    jupiter_angle += 0.003 * speed
+    jupiter_x = sun_pos[0] + jupiter_orbit_radius * math.cos(jupiter_angle)
+    jupiter_y = sun_pos[1] + jupiter_orbit_radius * math.sin(jupiter_angle)
+
 
     # Draw time
     screen.fill("black")
@@ -174,6 +193,7 @@ while running:
     pygame.draw.circle(screen, earth_color, (int(earth_x), int(earth_y)), earth_radius)
     pygame.draw.circle(screen, moon_color, (int(moon_x), int(moon_y)), moon_radius)
     pygame.draw.circle(screen, mars_color, (int(mars_x), int(mars_y)), mars_radius)
+    pygame.draw.circle(screen, jupiter_color, (int(jupiter_x), int(jupiter_y)), jupiter_radius)
     speed_text = font.render(f"Speed: {int(display_speed)}", True, (255, 255, 255))
     screen.blit(speed_text, (50, 1000))
 
@@ -183,6 +203,7 @@ while running:
         pygame.draw.circle(screen, (50, 50, 50), sun_pos, earth_orbit_radius, 1)
         pygame.draw.circle(screen, (50, 50, 50), sun_pos, mars_orbit_radius, 1)
         pygame.draw.circle(screen, (80, 80, 80), (int(earth_x), int(earth_y)), moon_orbit_radius, 1)
+        pygame.draw.circle(screen, (50, 50, 50), sun_pos, jupiter_orbit_radius, 1)
     
     print(f"S: {speed} | DS: {display_speed}")
 
