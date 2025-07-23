@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 pygame.init()
-
+pygame.mixer.init()
 
 # game variables
 
@@ -17,12 +17,28 @@ pygame.display.set_caption("Solar System")
 debug_shown = False
 running = True
 font = pygame.font.SysFont("Sans-serif", 80)
-button_font = pygame.font.SysFont("Sans-serif", 50)
+button_font = pygame.font.SysFont("Sans-serif", 40)
 paused_text = font.render("Paused", True, (255, 255, 255))
 speed = 1
 bg = pygame.image.load("bg.webp").convert()
 bg = pygame.transform.scale(bg, (screen_width, screen_height))
-button_rect = pygame.Rect(screen_width - 130 - 20, screen_height - 65 - 0, 120, 50)
+exit_button_rect = pygame.Rect(screen_width - 130 - 20, screen_height - 65 - 0, 120, 50)
+options_button_rect = pygame.Rect(screen_width - 130 - 20, screen_height - 65 - 60, 120, 50)
+
+def read_file_to_var():
+    with open("vol.txt", 'r') as f:
+        vol = f.read()
+    return vol
+
+# Music
+
+try:
+    pygame.mixer.music.load("space.mp3")
+    pygame.mixer.music.play(-1)
+    music_volume = float(read_file_to_var())
+    pygame.mixer.music.set_volume(music_volume)
+except Exception as e:
+    print("🎵 Music error:", e)
 
 
 # Colors
@@ -103,7 +119,10 @@ ne_orbit_radius = int(min(screen_width, screen_height) * 0.45)
 ne_angle = 0
 
 
-def draw_button(text):
+def get_music_volume():
+    pass
+
+def draw_button(text, button_rect):
     mouse_pos = pygame.mouse.get_pos()
     if button_rect.collidepoint(mouse_pos):
         color = LIGHT_GRAY
@@ -162,7 +181,7 @@ def pause():
         screen.blit(paused_text, (50, 50))
         screen.blit(speed_text, (50, 1000))
         
-        draw_button("Exit")
+        draw_button("Exit", exit_button_rect)
 
         pygame.display.flip()
         clock.tick(60)
@@ -189,10 +208,13 @@ while running:
             if event.key == pygame.K_r:
                 speed = 1
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if button_rect.collidepoint(event.pos):
+            if exit_button_rect.collidepoint(event.pos):
                 if event.button == 1:
                     subprocess.Popen(['python3', 'menu.py'])
                     sys.exit()
+            if options_button_rect.collidepoint(event.pos):
+                if event.button == 1:
+                    pass
 
 
     keys = pygame.key.get_pressed()
@@ -296,12 +318,12 @@ while running:
 
     screen.blit(speed_text, (50, 1000))
     
-    print(f"S: {speed} | DS: {display_speed}")
 
-    draw_button("Exit")
+    draw_button("Exit", exit_button_rect)
+    # draw_button("Options", options_button_rect)
 
     pygame.display.flip()
     clock.tick(60)
 
 pygame.quit()
-
+sys.exit()

@@ -24,8 +24,10 @@ title_font = pygame.font.SysFont(None, 110)
 button_font = pygame.font.SysFont(None, 50)
 
 # Buttons
-play_button = pygame.Rect(screen_width // 2 - 200, screen_height // 2 - 20, 400, 80)
-quit_button = pygame.Rect(screen_width // 2 - 200, screen_height // 2 + 90, 400, 80)
+play_button = pygame.Rect(screen_width // 2 - 200, screen_height // 2 - 120, 400, 80)
+options_button = pygame.Rect(screen_width // 2 - 200, screen_height // 2 - 10, 400, 80)
+quit_button = pygame.Rect(screen_width // 2 - 200, screen_height // 2 + 100, 400, 80)
+
 
 def draw_button(rect, text, hover):
     color = LIGHT_GRAY if hover else DARK_GRAY
@@ -38,6 +40,7 @@ def main_menu():
     while True:
         mouse_pos = pygame.mouse.get_pos()
         play_hover = play_button.collidepoint(mouse_pos)
+        options_hover = options_button.collidepoint(mouse_pos)
         quit_hover = quit_button.collidepoint(mouse_pos)
 
         for event in pygame.event.get():
@@ -51,26 +54,27 @@ def main_menu():
                         subprocess.Popen(['python3', 'game.py'])
                         pygame.quit()
                         sys.exit()
-                    elif quit_button.collidepoint(event.pos):
+                    if options_button.collidepoint(event.pos):
+                        subprocess.Popen(['python3', 'options.py'])
+                        pygame.quit()
+                        sys.exit()
+                    if quit_button.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:  
-                    subprocess.Popen(['python3', 'game.py'])
-                    pygame.quit()
-                    sys.exit()
+
 
         screen.fill((0, 0, 0))
         screen.blit(bg, (0, 0))
 
         # Draw title
         title_surf = title_font.render("Solar System", True, WHITE)
-        title_rect = title_surf.get_rect(center = (screen_width // 2, 400))
+        title_rect = title_surf.get_rect(center=(screen_width // 2, 300))
         screen.blit(title_surf, title_rect)
 
         # Draw buttons
         draw_button(play_button, "PLAY", play_hover)
+        draw_button(options_button, "OPTIONS", options_hover)
         draw_button(quit_button, "QUIT", quit_hover)
 
         pygame.display.flip()
