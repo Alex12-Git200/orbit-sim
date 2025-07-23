@@ -1,5 +1,6 @@
 import pygame
 import math
+import subprocess
 import sys
 
 pygame.init()
@@ -15,9 +16,21 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("Solar System")
 debug_shown = False
 running = True
-font = pygame.font.SysFont("Arial", 80)
+font = pygame.font.SysFont("Sans-serif", 80)
+button_font = pygame.font.SysFont("Sans-serif", 50)
 paused_text = font.render("Paused", True, (255, 255, 255))
 speed = 1
+bg = pygame.image.load("bg.webp").convert()
+bg = pygame.transform.scale(bg, (screen_width, screen_height))
+button_rect = pygame.Rect(screen_width - 130 - 20, screen_height - 65 - 0, 120, 50)
+
+
+# Colors
+
+WHITE = (255, 255, 255)
+LIGHT_GRAY = (200, 200, 200)
+DARK_GRAY = (100, 100, 100)
+
 
 # Sun 
 
@@ -90,6 +103,18 @@ ne_orbit_radius = int(min(screen_width, screen_height) * 0.45)
 ne_angle = 0
 
 
+def draw_button(text):
+    mouse_pos = pygame.mouse.get_pos()
+    if button_rect.collidepoint(mouse_pos):
+        color = LIGHT_GRAY
+    else:
+        color = DARK_GRAY
+
+    pygame.draw.rect(screen, color, button_rect, border_radius = 10)
+    
+    text = button_font.render(text, True, WHITE)
+    text_rect = text.get_rect(center=button_rect.center)
+    screen.blit(text, text_rect)
 
 def pause():
     while True: 
@@ -109,6 +134,7 @@ def pause():
 
         # Draw time
         screen.fill("black")
+        screen.blit(bg, (0, 0))
 
         if debug_shown:
             pygame.draw.circle(screen, (50, 50, 50), sun_pos, mer_orbit_radius, 1)
@@ -120,7 +146,6 @@ def pause():
             pygame.draw.circle(screen, (50, 50, 50), sun_pos, saturn_orbit_radius, 1)
             pygame.draw.circle(screen, (50, 50, 50), sun_pos, ur_orbit_radius, 1)
             pygame.draw.circle(screen, (50, 50, 50), sun_pos, ne_orbit_radius, 1)
-
 
         pygame.draw.circle(screen, sun_color, sun_pos, sun_radius)
         pygame.draw.circle(screen, mer_color, (int(mer_x), int(mer_y)), mer_radius)
@@ -137,7 +162,8 @@ def pause():
         screen.blit(paused_text, (50, 50))
         screen.blit(speed_text, (50, 1000))
         
-        
+        draw_button("Exit")
+
         pygame.display.flip()
         clock.tick(60)
             
@@ -162,6 +188,12 @@ while running:
                 pause()
             if event.key == pygame.K_r:
                 speed = 1
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_rect.collidepoint(event.pos):
+                if event.button == 1:
+                    subprocess.Popen(['python3', 'menu.py'])
+                    sys.exit()
+
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
@@ -193,6 +225,7 @@ while running:
     venus_y = sun_pos[1] + venus_orbit_radius * math.sin(venus_angle)
     
     # earth and moon orbit
+
     earth_angle += 0.0068 * speed
     earth_x = sun_pos[0] + earth_orbit_radius * math.cos(earth_angle)
     earth_y = sun_pos[1] + earth_orbit_radius * math.sin(earth_angle)
@@ -236,6 +269,7 @@ while running:
 
     # Draw time
     screen.fill("black")
+    screen.blit(bg, (0, 0))
 
     if debug_shown:
         pygame.draw.circle(screen, (50, 50, 50), sun_pos, mer_orbit_radius, 1)
@@ -259,9 +293,12 @@ while running:
     pygame.draw.circle(screen, ur_color, (int(ur_x), int(ur_y)), ur_radius)
     pygame.draw.circle(screen, ne_color, (int(ne_x), int(ne_y)), ne_radius)
     speed_text = font.render(f"Speed: {int(display_speed)}", True, (255, 255, 255))
+
     screen.blit(speed_text, (50, 1000))
     
     print(f"S: {speed} | DS: {display_speed}")
+
+    draw_button("Exit")
 
     pygame.display.flip()
     clock.tick(60)
