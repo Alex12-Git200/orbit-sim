@@ -19,7 +19,7 @@ WHITE = (255, 255, 255)
 LIGHT_GRAY = (200, 200, 200)
 DARK_GRAY = (100, 100, 100)
 
-# Font
+# Fonts
 title_font = pygame.font.SysFont(None, 110)
 button_font = pygame.font.SysFont(None, 50)
 
