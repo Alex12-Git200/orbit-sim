@@ -63,11 +63,31 @@ mars_angle = 0
 
 # Jupiter
 
-jupiter_color = (255, 165, 0)
+jupiter_color = (216,202,157)
 jupiter_radius = int(min(screen_width, screen_height) * 0.02)
 jupiter_orbit_radius = int(min(screen_width, screen_height) * 0.3)
 jupiter_angle = 0
 
+# Saturn
+
+saturn_color = (255, 165, 0)
+saturn_radius = int(min(screen_width, screen_height) * 0.017)
+saturn_orbit_radius = int(min(screen_width, screen_height) * 0.35)
+saturn_angle = 0
+
+# Uranus
+
+ur_color = (0, 255, 255)
+ur_radius = int(min(screen_width, screen_height) * 0.01)
+ur_orbit_radius = int(min(screen_width, screen_height) * 0.4)
+ur_angle = 0
+
+# Neptune 
+
+ne_color = (0, 0, 255)
+ne_radius = int(min(screen_width, screen_height) * 0.01)
+ne_orbit_radius = int(min(screen_width, screen_height) * 0.45)
+ne_angle = 0
 
 
 
@@ -89,6 +109,19 @@ def pause():
 
         # Draw time
         screen.fill("black")
+
+        if debug_shown:
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, mer_orbit_radius, 1)
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, venus_orbit_radius, 1)
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, earth_orbit_radius, 1)
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, mars_orbit_radius, 1)
+            pygame.draw.circle(screen, (80, 80, 80), (int(earth_x), int(earth_y)), moon_orbit_radius, 1)
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, jupiter_orbit_radius, 1)
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, saturn_orbit_radius, 1)
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, ur_orbit_radius, 1)
+            pygame.draw.circle(screen, (50, 50, 50), sun_pos, ne_orbit_radius, 1)
+
+
         pygame.draw.circle(screen, sun_color, sun_pos, sun_radius)
         pygame.draw.circle(screen, mer_color, (int(mer_x), int(mer_y)), mer_radius)
         pygame.draw.circle(screen, venus_color, (int(venus_x), int(venus_y)), venus_radius)
@@ -97,16 +130,13 @@ def pause():
         pygame.draw.circle(screen, mars_color, (int(mars_x), int(mars_y)), mars_radius)
         pygame.draw.circle(screen, mars_color, (int(mars_x), int(mars_y)), mars_radius)
         pygame.draw.circle(screen, jupiter_color, (int(jupiter_x), int(jupiter_y)), jupiter_radius)
+        pygame.draw.circle(screen, saturn_color, (int(saturn_x), int(saturn_y)), saturn_radius)
+        pygame.draw.circle(screen, ur_color, (int(ur_x), int(ur_y)), ur_radius)
+        pygame.draw.circle(screen, ne_color, (int(ne_x), int(ne_y)), ne_radius)
         speed_text = font.render(f"Speed: {int(display_speed)}", True, (255, 255, 255))
         screen.blit(paused_text, (50, 50))
         screen.blit(speed_text, (50, 1000))
         
-        if debug_shown:
-            pygame.draw.circle(screen, (50, 50, 50), sun_pos, mer_orbit_radius, 1)
-            pygame.draw.circle(screen, (50, 50, 50), sun_pos, venus_orbit_radius, 1)
-            pygame.draw.circle(screen, (50, 50, 50), sun_pos, earth_orbit_radius, 1)
-            pygame.draw.circle(screen, (50, 50, 50), sun_pos, mars_orbit_radius, 1)
-            pygame.draw.circle(screen, (80, 80, 80), (int(earth_x), int(earth_y)), moon_orbit_radius, 1)
         
         pygame.display.flip()
         clock.tick(60)
@@ -185,17 +215,27 @@ while running:
     jupiter_y = sun_pos[1] + jupiter_orbit_radius * math.sin(jupiter_angle)
 
 
+    # Saturn Orbit
+
+    saturn_angle += 0.002 * speed
+    saturn_x = sun_pos[0] + saturn_orbit_radius * math.cos(saturn_angle)
+    saturn_y = sun_pos[1] + saturn_orbit_radius * math.sin(saturn_angle)
+
+    # Uranus Orbit
+
+    ur_angle += 0.001 * speed
+    ur_x = sun_pos[0] + ur_orbit_radius * math.cos(ur_angle)
+    ur_y = sun_pos[1] + ur_orbit_radius * math.sin(ur_angle)
+
+    # Neptune orbit
+
+    ne_angle += 0.0006  * speed
+    ne_x = sun_pos[0] + ne_orbit_radius * math.cos(ne_angle)
+    ne_y = sun_pos[1] + ne_orbit_radius * math.sin(ne_angle)
+
+
     # Draw time
     screen.fill("black")
-    pygame.draw.circle(screen, sun_color, sun_pos, sun_radius)
-    pygame.draw.circle(screen, mer_color, (int(mer_x), int(mer_y)), mer_radius)
-    pygame.draw.circle(screen, venus_color, (int(venus_x), int(venus_y)), venus_radius)
-    pygame.draw.circle(screen, earth_color, (int(earth_x), int(earth_y)), earth_radius)
-    pygame.draw.circle(screen, moon_color, (int(moon_x), int(moon_y)), moon_radius)
-    pygame.draw.circle(screen, mars_color, (int(mars_x), int(mars_y)), mars_radius)
-    pygame.draw.circle(screen, jupiter_color, (int(jupiter_x), int(jupiter_y)), jupiter_radius)
-    speed_text = font.render(f"Speed: {int(display_speed)}", True, (255, 255, 255))
-    screen.blit(speed_text, (50, 1000))
 
     if debug_shown:
         pygame.draw.circle(screen, (50, 50, 50), sun_pos, mer_orbit_radius, 1)
@@ -204,6 +244,22 @@ while running:
         pygame.draw.circle(screen, (50, 50, 50), sun_pos, mars_orbit_radius, 1)
         pygame.draw.circle(screen, (80, 80, 80), (int(earth_x), int(earth_y)), moon_orbit_radius, 1)
         pygame.draw.circle(screen, (50, 50, 50), sun_pos, jupiter_orbit_radius, 1)
+        pygame.draw.circle(screen, (50, 50, 50), sun_pos, saturn_orbit_radius, 1)
+        pygame.draw.circle(screen, (50, 50, 50), sun_pos, ur_orbit_radius, 1)
+        pygame.draw.circle(screen, (50, 50, 50), sun_pos, ne_orbit_radius, 1)
+
+    pygame.draw.circle(screen, sun_color, sun_pos, sun_radius)
+    pygame.draw.circle(screen, mer_color, (int(mer_x), int(mer_y)), mer_radius)
+    pygame.draw.circle(screen, venus_color, (int(venus_x), int(venus_y)), venus_radius)
+    pygame.draw.circle(screen, earth_color, (int(earth_x), int(earth_y)), earth_radius)
+    pygame.draw.circle(screen, moon_color, (int(moon_x), int(moon_y)), moon_radius)
+    pygame.draw.circle(screen, mars_color, (int(mars_x), int(mars_y)), mars_radius)
+    pygame.draw.circle(screen, jupiter_color, (int(jupiter_x), int(jupiter_y)), jupiter_radius)
+    pygame.draw.circle(screen, saturn_color, (int(saturn_x), int(saturn_y)), saturn_radius)
+    pygame.draw.circle(screen, ur_color, (int(ur_x), int(ur_y)), ur_radius)
+    pygame.draw.circle(screen, ne_color, (int(ne_x), int(ne_y)), ne_radius)
+    speed_text = font.render(f"Speed: {int(display_speed)}", True, (255, 255, 255))
+    screen.blit(speed_text, (50, 1000))
     
     print(f"S: {speed} | DS: {display_speed}")
 
