@@ -6,4 +6,4 @@ H - Show orbit lines
 Arrow key up - Increase orbit speed
 Arrow key down - Decrease orbit speed
 
-Note: Run "menu.py" start the game.
+Note: Run "menu.py" to start the game.
